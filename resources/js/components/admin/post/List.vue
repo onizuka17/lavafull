@@ -25,7 +25,7 @@
 
               <div class="card-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" v-model="post_keyword" @keyup="searchCate(post_keyword)" name="cate_keyword" class="form-control float-right" placeholder="Search">
+                  <input type="text" v-model="post_keyword" @keyup="searchPost(post_keyword)" name="cate_keyword" class="form-control float-right" placeholder="Search">
 
                   <div class="input-group-append">
                     <button type="button" class="btn btn-default" ><i class="fas fa-search"></i></button>
@@ -35,24 +35,38 @@
             </div>
             <!-- /.card-header -->
             <div class="card-body table-responsive p-0">
-              <table class="table table-hover text-nowrap">
+              <table class="table table-striped text-nowrap">
                 <thead>
                   <tr>
                     <th>ID</th>
-                    <th>Danh mục</th>
+                    <th>Hình</th>
                     <th>Tiêu đề</th>
-                    <th>Thời gian</th>
+                    <th>Danh mục</th>
+                    <th>Trạng thái</th>
                     <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr v-for="(item,index) in listpost">
                     <td>{{ page > 0 ? (page-1)*per_page+index+1 : index+1 }}</td>
-                    <td>{{item.parent_name !== '' ? item.parent_name : '' }}</td>
-                    <td>{{item.title}}
+                    <td><img :src="item.feature_img_fullpath !== '' ? item.feature_img_fullpath : ''" style="max-height: 50px"></td>
+                    <td>
+                      {{item.title}}
                       <small class="text-success m-1 d-block"><i class="fa fa-globe"></i> {{rootUrl}}{{item.slug}}</small>
+                      <small class="text m-1 d-block" >{{item.created_at}}</small>
                     </td>
-                    <td>{{item.created_at}}</td>
+                    <td>
+                      <ul class="m-0 p-0">
+                        <li v-if="item.post_taxonomy.length > 0" v-for="cat in item.post_taxonomy">
+                           <span class="badge bg-warning small"  >{{cat.title}}</span>
+                        </li>
+                      </ul>
+                     
+                    </td>
+                    <td>
+                        <span class="badge bg-success small" v-if="item.active > 0"  >Hiển thị</span>
+                        <span class="badge bg-danger small" v-if="item.feature > 0"  >Nổi bật</span>
+                    </td>
                     <td>
                       <router-link :to="{name:'edit-post', params:{postid: item.id}}" class="btn btn-primary">Sửa</router-link> 
                       <button class="btn btn-danger" @click="removePost(item.id)" >Xóa</button>
@@ -69,7 +83,7 @@
                 </ul>
                 <div class="col-2 m-1 float-right">
                   <label class="d-inline-block">Hiển thị:</label>
-                  <select class="form-control w-50 form-control-sm d-inline-block" v-model="display_row" @click="setPerPage(display_row)" >
+                  <select class="form-control w-50 form-control-sm d-inline-block" v-model="display_row" @change="setPerPage(display_row)" >
                       <option>5</option>
                       <option>10</option>
                       <option>50</option>
@@ -115,7 +129,7 @@ export default {
       ])
   },
   created(){
-    this.$store.dispatch('post/getAllPost')
+    //this.$store.dispatch('post/getAllPost')
     this.$store.dispatch('post/getAllPostWithPag')
   } 
 

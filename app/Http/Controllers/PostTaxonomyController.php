@@ -6,7 +6,26 @@ use App\Post_taxonomy;
 use Illuminate\Http\Request;
 
 class PostTaxonomyController extends Controller
-{
+{   
+    public function hasChild($id)
+    {
+        $cate = New Post_taxonomy();
+        $child=$cate::where('parent_id','=',$id)->get();
+        foreach ($child as $key => $value) {
+            $child[$key]->hasChild=$this->hasChild($value->id);
+        }
+        return $child;
+    }
+    public function cate_with_subcate(){
+        $cate = New Post_taxonomy();
+        $list=$cate::where('parent_id','=',0)->get();
+        foreach ($list as $key => $value) {
+            $list[$key]->hasChild=$this->hasChild($value->id);
+
+        }
+
+        return response()->json(['list_category' => $list]);
+    }
     //
     public function add_category(Request $request)
     {	

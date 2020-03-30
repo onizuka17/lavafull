@@ -20,3 +20,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 
 
+Route::get('/list-post/{per_page}/{page}', 'BlogController@posts_with_pagination');
+Route::get('/all-feature-post', 'BlogController@all_feature_posts');
+Route::get('/get-post/{postid}', 'BlogController@get_post');	

@@ -34,6 +34,7 @@ const actions = {
 		axios.get('/api/admin/list-post/'+state.per_page+'/'+state.page)
 		  .then(function (response) {  
 		  	//console.log(response);
+		  	commit('setTotalList' , response.data.total);
 		    commit('setListPost' , response.data.list_post)
 		  })
 	},
@@ -41,18 +42,19 @@ const actions = {
 		axios.delete('/api/admin/delete-post/'+postid)
 			.then(function(response){
 				//console.log(response);
+				//dispatch('getAllPost');
 				dispatch('getAllPostWithPag');
 				Toast.fire({
 				  icon: 'success',
 				  title: 'Danh mục mới đã xóa'
-				})
+				});
 			})
 	},
 	searchPost({ commit, dispatch, state }, post_keyword){
-		if (cate_keyword) {
+		if (post_keyword) {
 			axios.get('/api/admin/all-post')
 			  .then(function (response) {  
-			  	console.log(response);
+			  	//console.log(response);
 			  	let list_post = response.data.list_post;
 			  	let result_list=list_post.filter((item) => {
 					return item.title.indexOf(post_keyword) !== -1;

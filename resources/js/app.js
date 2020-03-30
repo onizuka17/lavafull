@@ -24,6 +24,11 @@ window.Form = Form;
 Vue.component(HasError.name, HasError)
 Vue.component(AlertError.name, AlertError)
 
+
+import { objectToFormData } from 'object-to-formdata';
+window.objectToFormData = objectToFormData ;
+
+
 import Swal from 'sweetalert2'
 const Toast = Swal.mixin({
   toast: true,
@@ -40,8 +45,18 @@ import VueRouter from 'vue-router';
 import {routes} from './routes';
 Vue.use(VueRouter);
 
+import CKEditor from '@ckeditor/ckeditor5-vue';
+
+
+Vue.use(CKEditor);
+
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('adminmaster-component', require('./components/admin/AdminMaster.vue').default);
+
+/*PUBLIC*/
+Vue.component('publicmaster-component', require('./components/public/PublicMaster.vue').default);
+Vue.component('header-component', require('./components/public/Header.vue').default);
+Vue.component('footer-component', require('./components/public/Footer.vue').default);
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -62,3 +77,8 @@ const app = new Vue({
     router,
     store
 });
+
+
+export function createApp (){
+  return { app, router }
+}

@@ -1,6 +1,7 @@
 const state = {
 	all : [],
 	list: [],
+	list_has_child: [],
 	total: 0,
 	per_page: 5,
 	page: 1,
@@ -20,6 +21,13 @@ const actions = {
 		  	//console.log(response);
 		    commit('setAllCate' , response.data.list_category);
 		    commit('setTotalList' , response.data.total)
+		  })
+	},
+	getAllCateHasChild({commit}) {
+		axios.get('/api/admin/category-with-subcate')
+		  .then(function (response) {  
+		  	console.log(response);
+		    commit('setAllCateHasChild' , response.data.list_category);
 		  })
 	},
 	getCate({commit},catid) {
@@ -52,7 +60,7 @@ const actions = {
 		if (cate_keyword) {
 			axios.get('/api/admin/all-category')
 			  .then(function (response) {  
-			  	console.log(response);
+			  	//console.log(response);
 			  	let list_category = response.data.list_category;
 			  	let result_list=list_category.filter((item) => {
 					return item.title.indexOf(cate_keyword) !== -1;
@@ -79,6 +87,9 @@ const actions = {
 const mutations = {
 	setAllCate (state, all) {
 		state.all = all
+	},
+	setAllCateHasChild (state, all) {
+		state.list_has_child = all
 	},
 	setListCate (state, list_category) {
 		state.list = list_category
